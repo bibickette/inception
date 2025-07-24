@@ -1,0 +1,10 @@
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: nginx_image
+    container_name: nginx_container
+    ports:
+      - "443:443"
+      - "80:80"
