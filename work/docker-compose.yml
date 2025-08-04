@@ -3,9 +3,14 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    image: nginx_image
-    container_name: nginx_container
+    image: nginx
+    container_name: nginx
     ports:
       - "443:443"
       - "80:80"
   mariadb:
+    build:
+      context: ./mariadb
+      dockerfile: Dockerfile
+    image: mariadb
+    container_name: mariadb

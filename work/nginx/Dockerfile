@@ -9,8 +9,8 @@ RUN apt update && apt upgrade -y && \
     -subj "/C=FR/ST=Ile-de-France/L=Paris/O=Bickette/CN=phwang.42.fr"
 
 # copier le fichier nginx dans le container
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY index.html /etc/share/nginx/html/index.html
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY tools/index.html /etc/share/nginx/html/index.html
 
 EXPOSE 443
 

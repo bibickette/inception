@@ -1,0 +1,58 @@
+# 🎯 Le but principal de ce script est :
+# 👉 Créer une base de données SQL et un utilisateur associé, automatiquement, au démarrage du container MariaDB.
+
+# ✅ Ce que le script fait concrètement :
+# Démarre MariaDB
+# Crée une base de données
+# Crée un utilisateur avec un mot de passe
+# Donne à cet utilisateur les droits sur la base
+# Modifie le mot de passe du compte root
+# Recharge les droits
+# Redémarre MariaDB proprement
+
+# 🧠 Pourquoi on le fait ?
+# Parce que MariaDB démarre vide par défaut : pas de base, pas d’utilisateur (sauf root)
+# WordPress (ou tout autre app) a besoin d’une base + un utilisateur pour se connecter
+# Ça rend ton container automatisé et réutilisable sur n'importe quelle machine
+
+# ✅ Résumé simple pour tes notes :
+# # Script d'init MariaDB
+
+# 🎯 Objectif :
+# - Créer une base SQL automatiquement
+# - Créer un utilisateur avec mot de passe
+# - Donner les droits à cet utilisateur
+# - Éviter de faire ça à la main à chaque fois
+
+# 📦 Important pour :
+# - WordPress
+# - phpMyAdmin
+# - Toute app qui utilise une base
+
+# 📁 Le script est lancé au démarrage du container
+
+#!/bin/bash
+# La commande service permet de démarrer MySQL avec la commande associée.
+service mysql start;
+
+# demande de créer une table si elle n’existe pas déjà, du nom de la variable d’environnement SQL_DATABASE, indiqué dans mon fichier .env qui sera envoyé par le docker-compose.yml.
+mysql -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
+
+# crée l’utilisateur SQL_USER s’il n’existe pas, avec le mot de passe SQL_PASSWORD , toujours à indiquer dans le .env
+mysql -e "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';"
+
+# donne les droits à l’utilisateur SQL_USER avec le mot de passe SQL_PASSWORD pour la table SQL_DATABASE
+mysql -e "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
+
+# change les droits root par localhost, avec le mot de passe root SQL_ROOT_PASSWORD
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';"
+
+# Plus qu’à rafraichir tout cela pour que MySQL le prenne en compte.
+mysql -e "FLUSH PRIVILEGES;"
+
+# Il ne nous reste plus qu’à redémarrer MySQL pour que tout cela soit effectif !
+# Arrête proprement MySQL
+mysqladmin -u root -p$SQL_ROOT_PASSWORD shutdown
+
+# Redémarre MySQL proprement
+exec mysqld_safe
