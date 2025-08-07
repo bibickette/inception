@@ -2,11 +2,12 @@
 set -e
 
 mkdir -p /run/php
-chown root:root /run/php
+chown www-data:www-data /run/php
 
 # Assure-toi que le dossier wordpress existe
 mkdir -p /var/www/wordpress
-chown -R root:root /var/www/wordpress
+chown -R www-data:www-data /var/www/wordpress
+chmod -R 755 /var/www/wordpress
 
 cd /var/www
 
@@ -16,7 +17,7 @@ if [ ! -f wordpress/wp-config-sample.php ]; then
   wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -O wordpress.tar.gz
   tar -xzf wordpress.tar.gz
   rm wordpress.tar.gz
-  chown -R root:root wordpress
+  chown -R www-data:www-data wordpress
 fi
 
 cd wordpress
