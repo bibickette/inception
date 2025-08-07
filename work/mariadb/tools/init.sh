@@ -15,20 +15,20 @@ mysqld_safe --skip-networking --socket=/run/mysqld/mysqld.sock &
 sleep 5
 
 # Initialisation de la DB si elle n'existe pas
-if [ ! -d "/var/lib/mysql/${SQL_DATABASE}" ]; then
-  echo "✅ Création de la base ${SQL_DATABASE}..."
+if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ]; then
+  echo "✅ Création de la base ${MYSQL_DATABASE}..."
 
   mysql -u root <<-EOSQL
-    CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;
-    CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';
-    GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%';
-    ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';
+    CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
+    CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+    GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%';
+    ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
     FLUSH PRIVILEGES;
 EOSQL
 fi
 
 # Arrêt de MariaDB (il redémarrera ensuite avec CMD)
-mysqladmin -u root -p${SQL_ROOT_PASSWORD} shutdown
+mysqladmin -u root -p${MYSQL_ROOT_PASSWORD} shutdown
 
 # Relance finale de MariaDB en process principal
 exec mysqld_safe
