@@ -10,7 +10,6 @@ RUN apt update && apt upgrade -y && \
 
 # copier le fichier nginx dans le container
 COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY tools/index.html /etc/share/nginx/html/index.html
 
 EXPOSE 443
 

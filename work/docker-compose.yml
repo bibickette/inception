@@ -30,7 +30,6 @@ services:
       - .env
     networks:
       - inception
-
     restart: on-failure 
 
   mariadb:
