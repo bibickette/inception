@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
+mkdir -p /run/php
+chown www-data:www-data /run/php
+
 # Si WordPress n'est pas installé (pas de wp-config-sample.php), on le télécharge
 if [ ! -f /var/www/wordpress/wp-config-sample.php ]; then
-  mkdir -p /run/php
-  chown www-data:www-data /run/php
-
-  # Assure-toi que le dossier wordpress existe
+    # Assure-toi que le dossier wordpress existe
   mkdir -p /var/www/wordpress
   chown -R www-data:www-data /var/www/wordpress
   chmod -R 755 /var/www/wordpress
