@@ -5,21 +5,12 @@ set -e
 mkdir -p /run/mysqld
 chown mysql:mysql /run/mysqld
 
-if [ ! -d "/var/lib/mysql/mysql" ]; then
-    echo "🛠 Initialisation de MariaDB (base système)..."
-    mysql_install_db --user=mysql --datadir=/var/lib/mysql > /dev/null
-fi
-
 if [ ! -f "/var/lib/mysql/.initialized" ]; then
     echo "✅ Première initialisation de la base ${SQL_DATABASE}..."
 
     # Démarre MariaDB temporairement sans réseau (init)
     mysqld_safe --skip-networking --socket=/run/mysqld/mysqld.sock &
     sleep 5
-
-    mysql -u root <<-EOSQL
-        ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';
-EOSQL
 
     mysql -u root -p"${SQL_ROOT_PASSWORD}" <<-EOSQL
         CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;
@@ -35,6 +26,6 @@ EOSQL
     mysqladmin -u root -p"${SQL_ROOT_PASSWORD}" shutdown
 fi
 
-echo "✅ Lancement de MariaDB en mode principal..."
+echo "✅ Luckily start MariaDB..."
 exec mysqld_safe
 

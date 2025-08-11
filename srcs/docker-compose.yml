@@ -51,7 +51,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/phwang/data/mysql
+      device: /home/phwang/data/mariadb
       o: bind
   wordpress_data:
     driver: local
