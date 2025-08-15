@@ -17,8 +17,8 @@ all: first
 
 first: list
 	@if [ -d /home/phwang/data/wordpress ] && [ -d /home/phwang/data/mariadb ]; then \
-		echo "$(GREEN)Les dossiers existent déjà, lancement direct de docker-compose...$(RESET)"; \
-		docker-compose -f srcs/docker-compose.yml up; \
+		echo "$(GREEN)Les dossiers existent déjà, pas de creation$(RESET)"; \
+		echo "$(YELLOW)You can start make run$(RESET)"; \
 	else \
 		echo "$(GREEN)----- Dir list de home :$(RESET)"; \
 		ls /home/phwang; \
@@ -32,8 +32,7 @@ first: list
 		echo "$(GREEN)----- Dir list de home :$(RESET)"; \
 		ls /home/phwang; \
 		echo ""; \
-		echo "$(GREEN)----- LANCEMENT DE DOCKER COMPOSE :$(RESET)"; \
-		docker-compose -f srcs/docker-compose.yml up; \
+		echo "$(YELLOW)You can start make run$(RESET)"; \
 	fi
 
 run: list
@@ -93,8 +92,10 @@ volumes_clean:
 networks_clean:
 	@echo "$(GREEN)----- List des network :$(RESET)"
 	docker network ls
+	@echo "$(BLUE)Deleting srcs_inception...$(RESET)"
+	@docker network rm srcs_inception
 	@echo "$(YELLOW)----- List des network apres rm all :$(RESET)"
-	@docker network rm $(docker network ls -q)
+	@docker network ls
 	@echo ""
 
 fclean: clean containers_clean images_clean volumes_clean networks_clean list

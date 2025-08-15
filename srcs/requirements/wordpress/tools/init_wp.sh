@@ -27,6 +27,8 @@ if [ ! -f /var/www/wordpress/wp-config-sample.php ]; then
   sed -i "s/define( *'DB_PASSWORD' *, *'.*' *);/define( 'DB_PASSWORD', '${SQL_PASSWORD}' );/" wordpress/wp-config.php
   sed -i "s/define( *'DB_HOST' *, *'.*' *);/define( 'DB_HOST', '${SQL_HOST}' );/" wordpress/wp-config.php
 
+  sleep 5
+  
   echo "⚙️ Installation initiale de WordPress..."
   wp core install \
     --path=wordpress \
@@ -37,6 +39,7 @@ if [ ! -f /var/www/wordpress/wp-config-sample.php ]; then
     --admin_email="${WP_ADMIN_EMAIL}" \
     --skip-email \
     --allow-root
+  
 fi
 
 echo "✅ Luckily start php-fpm"
