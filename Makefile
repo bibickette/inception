@@ -53,6 +53,10 @@ list:
 	@docker volume ls
 	@echo ""
 
+	@echo "$(GREEN)----- List des networks :$(RESET)"
+	@docker network ls
+	@echo ""
+
 
 clean:
 	@echo "$(GREEN)----- List des containers en cours :$(RESET)"
@@ -86,15 +90,21 @@ volumes_clean:
 	@docker volume ls
 	@echo ""
 
+networks_clean:
+	@echo "$(GREEN)----- List des network :$(RESET)"
+	docker network ls
+	@echo "$(YELLOW)----- List des network apres rm all :$(RESET)"
+	@docker network rm $(docker network ls -q)
+	@echo ""
 
-fclean: clean containers_clean images_clean volumes_clean list
+fclean: clean containers_clean images_clean volumes_clean networks_clean list
 	@echo "$(PURPLE)----- Docker system prune de verification !$(RESET)"
 	docker system prune -a
 	@echo "$(BLUE)----- Delete les dossiers crees pour les volumes$(RESET)"
 	sudo rm -rf /home/phwang/data
-	@echo "$(GREEN)----- Dir list de home :$(RESET)"; \
-	ls /home/phwang; \
+	@echo "$(GREEN)----- Dir list de home :$(RESET)"
+	ls /home/phwang
 
 re: fclean first
 
-.PHONY: all fclean clean re
+.PHONY: all fclean clean re run containers_clean images_clean volumes_clean networks_clean list
