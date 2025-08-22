@@ -44,7 +44,7 @@ services:
       - .env
     networks:
       - inception
-    restart: unless-stopped
+    restart: on-failure
 
 volumes:
   mariadb_data:

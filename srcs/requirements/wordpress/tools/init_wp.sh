@@ -39,6 +39,13 @@ if [ ! -f /var/www/wordpress/wp-config-sample.php ]; then
     --admin_email="${WP_ADMIN_EMAIL}" \
     --skip-email \
     --allow-root
+
+    wp user create "${WP_AUTHOR_USER}" "${WP_AUTHOR_EMAIL}" \
+    --role=author \
+    --user_pass="${WP_AUTHOR_PASS}" \
+    --path=wordpress \
+    --allow-root
+
   
 fi
 
