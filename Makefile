@@ -37,7 +37,7 @@ first: list
 
 run: list
 	@echo "$(GREEN)----- LANCEMENT DE DOCKER COMPOSE :$(RESET)"
-	docker-compose -f srcs/docker-compose.yml up
+	docker-compose -f srcs/docker-compose.yml up --build
 
 list:
 	@echo "$(GREEN)----- List des containers en cours :$(RESET)"

@@ -1,7 +1,7 @@
 FROM debian:bullseye
 
 RUN apt update && apt upgrade -y && \
-    apt install mariadb-server -y 
+    apt install mariadb-server tini -y 
 
 COPY ./conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
 
@@ -10,6 +10,6 @@ RUN chmod +x /init.sh
 
 EXPOSE 3306
 
-ENTRYPOINT [ "/init.sh" ]
+ENTRYPOINT [ "/usr/bin/tini", "--", "/init.sh" ]
 
-CMD [ "mysqld_safe" ]
+CMD [ "mysqld" ]
