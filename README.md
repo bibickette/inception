@@ -145,21 +145,21 @@ WP_AUTHOR_EMAIL=author@example.com
 
 List of command to manually access the **MariaDB container** and **inspect the database** :
 
-1. Enter the MariaDB container : `docker exec -it <mariadb_container_name> bash`
+1. Enter the **MariaDB** container : `docker exec -it <mariadb_container_name> bash`
 2. Connect to **MariaDB** : `mysql -u root -p`
 3. Enter the `SQL_ROOT_PASSWORD` defined in your `.env` file.
-3. Show **available** **databases** : `SHOW DATABASES;`, you should see :  
+4. Show **available** **databases** : `SHOW DATABASES;`, you should see :  
 ```
 wordpress
 information_schema
 mysql
 performance_schema
 ```
-4. Use the **WordPress** **database** : `USE wordpress;`
-5. List tables `SHOW TABLES;`
-6. **Display** **WordPress** users `SELECT * FROM wp_users;`, you should see the admin and author users defined in your `.env`
-7. **Exit** **MariaDB** : `exit;`
-8. Then **exit the container** : `exit`
+5. Use the **WordPress** **database** : `USE wordpress;`
+6. List tables `SHOW TABLES;`
+7. **Display** **WordPress** users `SELECT * FROM wp_users;`, you should see the admin and author users defined in your `.env`
+8. **Exit** **MariaDB** : `exit;`
+9. Then **exit the container** : `exit`
 
 
 * * *
@@ -181,7 +181,7 @@ Deletes the local volume directories (`/home/$USER/data`)
 7. **images_clean** : removes all Docker images.
 8. **volumes_clean** : removes all Docker volumes.
 9. **networks_clean** : removes the project Docker network (`srcs_inception`).
-10. **list** : displays: running containers, available images, docker volumes, docker networks
+10. **list** : displays running containers, available images, docker volumes, docker networks
 
 * * *
 
@@ -189,7 +189,7 @@ Deletes the local volume directories (`/home/$USER/data`)
 
 1. Clone `inception` in a folder first  : `git clone git@github.com:bibickette/inception.git`
 2. Go to the `inception` folder then create an environment file (`.env`) (*see [environment variables](#environment-variables) for more details*)
-3. Build and start the infrastructure with `make`, this will : **create** the required local **volume** directories (`/home/$USER/data`); **build docker images** then **start all containers**
+3. Build and start the infrastructure with `make run`, this will : **create** the required local **volume** directories (`/home/$USER/data`); **build docker images** then **start all containers**
 4. Access the Services :  
 - **WordPress** : navigate `https://localhost`
 - **MariaDB** : accessible internally through the **Docker network** (mariadb service name) (*see [database access](#database-access) for more details*)
