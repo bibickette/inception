@@ -1,79 +1,139 @@
-# Inception
-si probleme douverture a cause du kvm:
-    sudo rmmod kvm_amd       
-    sudo rmmod kvm
+# ENGLISH VERSION
+# Project presentation - `inception`
+## Description
 
-# dockerignore
-Le fichier .dockerignore fonctionne un peu comme un .gitignore, mais pour Docker. Il sert à indiquer quels fichiers ou dossiers ne doivent pas être copiés dans l'image Docker quand tu construis ton image avec docker build.
-🧠 Pourquoi l'utiliser ?
+This project consists of setting up a containerized web infrastructure using Docker and Docker Compose.
 
-Quand tu fais un build Docker, tout ce qui est dans ton dossier (le build context) est envoyé au daemon Docker.
-Si tu as des fichiers inutiles ou volumineux (logs, .git, node_modules...), tu ralentis ton build, alourdis ton image, et exposes potentiellement des secrets.
+It is intended to run on **Debian Bullseye**, and both the host system and the Docker images are based on this distribution to ensure consistency and stability.  
+The development was carried out inside a **virtual machine**, providing a controlled and isolated environment.
 
-
-Voici un fichier .dockerignore typique :
-
-.git/
-.gitignore
-node_modules/
-*.log
-*.env
-__pycache__/
-Dockerfile~
-
-Cela évite de copier :
-
-    le dossier .git (inutile dans l'image)
-
-    des fichiers de config inutiles
-
-    des caches Python
-
-    des fichiers temporaires
-    
-
-✅ Avantages de .dockerignore :
-
-    Construction plus rapide
-
-    Image plus légère
-
-    Moins de risques de fuite de données sensibles
-
-    Meilleures pratiques de sécurité et performance
+The infrastructure includes a reverse proxy (NGINX), a WordPress application, and a MariaDB database, all running in separate containers.
 
 
-4️⃣ Les variables SQL_DATABASE, SQL_USER, SQL_PASSWORD, SQL_HOST
+* * *
 
-Ces variables viennent de ton .env (ou de ton docker-compose.yml).
-Elles doivent correspondre à ce que tu as défini dans ton conteneur MariaDB.
+## Languages & Technologies
 
-Exemple dans ton .env :
+**Languages**
+- Bash
+- Dockerfile
+- YAML
 
-SQL_DATABASE=wordpress
-SQL_USER=wp_user
-SQL_PASSWORD=wp_pass
-SQL_HOST=mariadb
+**Technologies**
+- Docker & Docker Compose
+- NGINX
+- WordPress
+- MariaDB
+- Linux (Debian Bullseye)
 
-Et dans ton docker-compose.yml :
 
-services:
-  mariadb:
-    environment:
-      - MYSQL_DATABASE=${SQL_DATABASE}
-      - MYSQL_USER=${SQL_USER}
-      - MYSQL_PASSWORD=${SQL_PASSWORD}
+* * *
+## Key Concepts
 
-5️⃣ À quoi sert la modification de wp-config.php ?
+* * *
+## System Environment
 
-Elle sert à lier ton WordPress à la base de données MariaDB.
-Sans ça, WordPress ne saura pas où se connecter.
-En gros :
+Host OS: Debian Bullseye  
+Docker base images: Debian Bullseye
+Container runtime: Docker
+Orchestration: Docker Compose
 
-    DB_NAME = nom de la base créée dans MariaDB
+* * *
+## Services Architecture
 
-    DB_USER / DB_PASSWORD = identifiants SQL (créés dans le conteneur MariaDB)
+The infrastructure is composed of the following services:
 
-    DB_HOST = nom du service MariaDB dans docker-compose (ex: mariadb), pas localhost
+### 1. NGINX
 
-💡 C’est cette connexion qui permet à WordPress de stocker ses articles, utilisateurs, réglages, etc.
+Acts as a reverse proxy
+Handles HTTPS connections
+Uses TLS certificates
+
+### 2. WordPress
+
+PHP-FPM application
+Serves dynamic content
+Connected to the MariaDB database
+
+### 3. MariaDB
+
+Relational database
+Stores WordPress data
+Runs in its own container
+
+Each service runs in a dedicated container and communicates through a Docker network.
+* * *
+## Volumes & Persistence
+
+Persistent data is stored using Docker volumes:
+
+WordPress files
+
+MariaDB database data
+
+This ensures that data is preserved even if containers are stopped or rebuilt.
+* * *
+## Security Considerations
+
+No service runs as root unnecessarily
+
+Secrets are managed using environment variables
+
+HTTPS enforced via NGINX
+
+Containers expose only required ports
+
+* * *
+## Project Structure
+```
+inception/
+├── srcs/
+│   ├── docker-compose.yml
+│   ├── .env
+│   └── requirements/
+│       ├── mariadb/
+│		│	├── conf/
+│		│	├── tools/
+│       │   └── Dockerfile
+│       ├── nginx/
+│		│	├── conf/
+│       │   └── Dockerfile
+│       └── wordpress/
+│			├── conf/
+│		 	├── tools/
+│           └── Dockerfile
+│  
+└── Makefile
+```
+* * *
+# Using `inception`
+## Makefile rules
+1. **first** as *default rule* : Creates the required directories for Docker volumes (`/home/phwang/data/wordpress` and `/home/phwang/data/mariadb`) if they do not already exist.  
+Displays the current Docker containers, images, volumes, and networks.
+2. **run** : Builds and starts the Docker infrastructure using:
+`docker-compose -f srcs/docker-compose.yml up --build`
+3. **clean** : Stops all running Docker containers.
+4. **fclean** : runs *clean containers_clean images_clean volumes_clean networks_clean list* rules then runs `docker system prune -a`.  
+Deletes the local volume directories (`/home/phwang/data`)
+5. **re** : *fclean* then *first* rule
+6. **containers_clean** : Removes all Docker containers.
+7. **images_clean** : Removes all Docker images.
+8. **volumes_clean** : Removes all Docker volumes.
+9. **networks_clean** : Removes the project Docker network (`srcs_inception`).
+10. **list** : Displays:  
+- Running containers
+- Available images
+- Docker volumes
+- Docker networks
+
+* * *
+
+## How to use `inception`
+
+1. Clone `inception` in a folder first  : `git clone git@github.com:bibickette/inception.git`
+2. Go to the `inception` folder then compile it : `cd inception && make`
+3.
+
+
+* * *
+*Project validation date : August 26, 2025*
