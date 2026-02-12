@@ -161,6 +161,11 @@ performance_schema
 7. **Exit** **MariaDB** : `exit;`
 8. Then **exit the container** : `exit`
 
+
+* * *
+## Note
+⚠️ Some paths, usernames, and domain names in this project (e.g., `/home/phwang/data` or `phwang.42.fr`) are specific to the original development environment. You should update them to match your local setup.
+
 * * *
 # Using `inception`
 ## Makefile rules
