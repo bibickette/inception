@@ -1,6 +1,9 @@
 🇫🇷 Version française disponible [ici](README_FR.md)
-* * *
+
+---
+
 # Project presentation - `inception`
+
 ## Description
 
 This project consists of setting up a **containerized web infrastructure** using **Docker** and **Docker Compose**.
@@ -10,25 +13,28 @@ The development was carried out inside a **virtual machine**, providing a contro
 
 The infrastructure includes a reverse proxy (**NGINX**), a **WordPress** application, and a **MariaDB** database, all running in separate containers.
 
+---
 
-* * *
 ## Languages & Technologies
 
 **Languages**
+
 - Bash
 - Dockerfile
 - YAML
 
 **Technologies**
+
 - Docker & Docker Compose
 - NGINX
 - WordPress
 - MariaDB
 - Linux (Debian Bullseye)
 
+---
 
-* * *
 ## Key Concepts
+
 - Docker images and containers
 - Docker Compose orchestration
 - Service isolation
@@ -38,44 +44,54 @@ The infrastructure includes a reverse proxy (**NGINX**), a **WordPress** applica
 - HTTPS configuration
 - Infrastructure as code
 
-* * *
+---
+
 ## System Environment
 
-- **Host OS** : Debian Bullseye  
+- **Host OS** : Debian Bullseye
 - **Docker base images** : Debian Bullseye
 - **Container runtime** : Docker
 - **Orchestration** : Docker Compose
 
-* * *
+---
+
 ## Services Architecture
 
 The infrastructure is composed of the following services:
 
 **1. NGINX**
+
 - Acts as a reverse proxy
 - Handles HTTPS connections
 - Uses TLS certificates
 
 **2. WordPress**
+
 - PHP-FPM application
 - Serves dynamic content
 - Connected to the MariaDB database
 
 **3. MariaDB**
+
 - Relational database
 - Stores WordPress data
 - Runs in its own container
 
 Each service runs in a dedicated container and communicates through a Docker network.
-* * *
+
+---
+
 ## Volumes & Persistence
 
 Persistent data is stored using **Docker volumes**:
+
 - WordPress files
 - MariaDB database data
 
 This ensures that data is preserved even if containers are stopped or rebuilt.
-* * *
+
+---
+
 ## Security Considerations
 
 - No service runs as root unnecessarily
@@ -83,8 +99,10 @@ This ensures that data is preserved even if containers are stopped or rebuilt.
 - HTTPS enforced via NGINX
 - Containers expose only required ports
 
-* * *
+---
+
 ## Project Structure
+
 ```
 inception/
 ├── srcs/
@@ -102,10 +120,12 @@ inception/
 │			├── conf/
 │		 	├── tools/
 │           └── Dockerfile
-│  
+│
 └── Makefile
 ```
-* * *
+
+---
+
 ## Environment Variables
 
 The project uses a `.env` file located in `srcs/` to configure database credentials and WordPress settings.
@@ -113,6 +133,7 @@ The project uses a `.env` file located in `srcs/` to configure database credenti
 ⚠️ The real `.env` file **should not** be committed.
 
 Below is a generic example for demonstration purposes:
+
 ```
 # ==========================
 # MariaDB Configuration
@@ -140,7 +161,8 @@ WP_AUTHOR_PASS=secure_author_password
 WP_AUTHOR_EMAIL=author@example.com
 ```
 
-* * *
+---
+
 ## Database Access
 
 List of command to manually access the **MariaDB container** and **inspect the database** :
@@ -148,52 +170,59 @@ List of command to manually access the **MariaDB container** and **inspect the d
 1. Enter the **MariaDB** container : `docker exec -it <mariadb_container_name> bash`
 2. Connect to **MariaDB** : `mysql -u root -p`
 3. Enter the `SQL_ROOT_PASSWORD` defined in your `.env` file.
-4. Show **available** **databases** : `SHOW DATABASES;`, you should see :  
+4. Show **available** **databases** : `SHOW DATABASES;`, you should see :
+
 ```
 wordpress
 information_schema
 mysql
 performance_schema
 ```
+
 5. Use the **WordPress** **database** : `USE wordpress;`
 6. List tables `SHOW TABLES;`
 7. **Display** **WordPress** users `SELECT * FROM wp_users;`, you should see the admin and author users defined in your `.env`
 8. **Exit** **MariaDB** : `exit;`
 9. Then **exit the container** : `exit`
 
+---
 
-* * *
 ## Note
+
 ⚠️ Some paths, usernames, and domain names in this project (e.g., `/home/phwang/data` or `phwang.42.fr`) are specific to the original development environment. You should update them to match your local setup.
 
-* * *
+---
+
 # Using `inception`
+
 ## Makefile rules
-1. **first** as *default rule* : creates the required directories for Docker volumes (`/home/$USER/data/wordpress` and `/home/$USER/data/mariadb`) if they do not already exist.  
-Displays the current Docker containers, images, volumes, and networks.
+
+1. **first** as _default rule_ : creates the required directories for Docker volumes (`/home/$USER/data/wordpress` and `/home/$USER/data/mariadb`) if they do not already exist.  
+   Displays the current Docker containers, images, volumes, and networks.
 2. **run** : builds and starts the Docker infrastructure using:
-`docker-compose -f srcs/docker-compose.yml up --build`
+   `docker-compose -f srcs/docker-compose.yml up --build`
 3. **clean** : stops all running Docker containers.
-4. **fclean** : runs *clean containers_clean images_clean volumes_clean networks_clean list* rules then runs `docker system prune -a`.  
-Deletes the local volume directories (`/home/$USER/data`)
-5. **re** : *fclean* then *first* rule
+4. **fclean** : runs _clean containers_clean images_clean volumes_clean networks_clean list_ rules then runs `docker system prune -a`.  
+   Deletes the local volume directories (`/home/$USER/data`)
+5. **re** : _fclean_ then _first_ rule
 6. **containers_clean** : removes all Docker containers.
 7. **images_clean** : removes all Docker images.
 8. **volumes_clean** : removes all Docker volumes.
 9. **networks_clean** : removes the project Docker network (`srcs_inception`).
 10. **list** : displays running containers, available images, docker volumes, docker networks
 
-* * *
+---
 
 ## How to use `inception`
 
-1. Clone `inception` in a folder first  : `git clone git@github.com:bibickette/inception.git`
-2. Go to the `inception` folder then create an environment file (`.env`) (*see [environment variables](#environment-variables) for more details*)
+1. Clone `inception` in a folder first : `git clone https://github.com/bibickette/inception.git`
+2. Go to the `inception` folder then create an environment file (`.env`) (_see [environment variables](#environment-variables) for more details_)
 3. Build and start the infrastructure with `make run`, this will : **create** the required local **volume** directories (`/home/$USER/data`); **build docker images** then **start all containers**
-4. Access the Services :  
+4. Access the Services :
+
 - **WordPress** : navigate `https://localhost`
-- **MariaDB** : accessible internally through the **Docker network** (mariadb service name) (*see [database access](#database-access) for more details*)
+- **MariaDB** : accessible internally through the **Docker network** (mariadb service name) (_see [database access](#database-access) for more details_)
 
+---
 
-* * *
-*Project validation date : August 26, 2025*
+_Project validation date : August 26, 2025_
