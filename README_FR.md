@@ -12,7 +12,7 @@ L’infrastructure inclut un reverse proxy (**NGINX**), une application **WordPr
 * * *
 ## Langages & Technologies
 
-**Langage**
+**Langages**
 - Bash
 - Dockerfile
 - YAML
